@@ -3,6 +3,7 @@ import { Euro, CreditCard, Smartphone, TrendingUp } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
 import { TransactionList } from "@/components/TransactionList";
 import { SourceFilter } from "@/components/SourceFilter";
+import { SyncButton } from "@/components/SyncButton";
 import { useTransactions, useTransactionStats } from "@/hooks/useTransactions";
 
 const Index = () => {
@@ -45,9 +46,14 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Stats Grid */}
         <section className="mb-10">
-          <h2 className="text-lg font-medium text-muted-foreground mb-4">
-            Vue d'ensemble
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <h2 className="text-lg font-medium text-muted-foreground">
+              Vue d'ensemble
+            </h2>
+            <div className="flex gap-2">
+              <SyncButton source="sumup" label="Sync SumUp" />
+            </div>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Recettes totales"

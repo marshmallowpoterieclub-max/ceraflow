@@ -1,1 +1,4 @@
 project_id = "oakolqfuutpquollitwm"
+
+[functions.sync-sumup]
+verify_jwt = false
