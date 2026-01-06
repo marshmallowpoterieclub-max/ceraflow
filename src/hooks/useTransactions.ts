@@ -12,6 +12,7 @@ export interface Transaction {
   transaction_date: string;
   created_at: string;
   updated_at: string;
+  items_count: number | null;
 }
 
 interface UseTransactionsOptions {

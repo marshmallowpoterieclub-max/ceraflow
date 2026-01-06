@@ -88,6 +88,53 @@ export type Database = {
           },
         ]
       }
+      transaction_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          price: number
+          quantity: number
+          total_price: number
+          transaction_id: string
+          vat_amount: number | null
+          vat_rate: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          price: number
+          quantity?: number
+          total_price: number
+          transaction_id: string
+          vat_amount?: number | null
+          vat_rate?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          price?: number
+          quantity?: number
+          total_price?: number
+          transaction_id?: string
+          vat_amount?: number | null
+          vat_rate?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_items_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transactions: {
         Row: {
           amount: number
@@ -97,6 +144,7 @@ export type Database = {
           description: string | null
           external_id: string | null
           id: string
+          items_count: number | null
           source: Database["public"]["Enums"]["payment_source"]
           transaction_date: string
           updated_at: string
@@ -109,6 +157,7 @@ export type Database = {
           description?: string | null
           external_id?: string | null
           id?: string
+          items_count?: number | null
           source?: Database["public"]["Enums"]["payment_source"]
           transaction_date?: string
           updated_at?: string
@@ -121,6 +170,7 @@ export type Database = {
           description?: string | null
           external_id?: string | null
           id?: string
+          items_count?: number | null
           source?: Database["public"]["Enums"]["payment_source"]
           transaction_date?: string
           updated_at?: string
