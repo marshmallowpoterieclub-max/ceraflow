@@ -66,3 +66,13 @@ The project uses relaxed TypeScript settings: `noImplicitAny: false`, `strictNul
 - Keep the Supabase integration patterns in `src/integrations/supabase/`
 - Supabase types are auto-generated - do not modify `src/integrations/supabase/types.ts` directly
 - Edge functions follow Deno conventions in `supabase/functions/`
+
+### Lovable Compatibility (IMPORTANT)
+L'app doit rester compatible avec Lovable pour pouvoir être modifiee dans l'interface Lovable. Pour cela:
+- Ne pas modifier la structure des fichiers generes par Lovable (`src/components/ui/`, `src/integrations/supabase/`)
+- Garder les imports avec l'alias `@/` (configure dans `vite.config.ts` et `tsconfig.json`)
+- Ne pas ajouter de dependances incompatibles avec l'environnement Lovable
+- Les composants doivent utiliser les patterns React standards (hooks, composants fonctionnels)
+- Eviter les configurations custom de build qui pourraient casser la compatibilite
+- Le fichier `package.json` doit rester compatible avec les versions supportees par Lovable
+- Les migrations Supabase dans `supabase/migrations/` sont appliquees automatiquement par Lovable

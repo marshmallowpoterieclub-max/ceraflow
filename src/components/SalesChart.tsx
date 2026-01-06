@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -11,36 +11,24 @@ import {
 } from "recharts";
 import {
   format,
-  startOfDay,
-  startOfWeek,
   startOfMonth,
   eachDayOfInterval,
-  eachWeekOfInterval,
   eachMonthOfInterval,
   subDays,
-  subWeeks,
   subMonths,
 } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Button } from "@/components/ui/button";
 import type { Transaction } from "@/hooks/useTransactions";
+import type { TimeRange } from "@/components/TimeRangeFilter";
 
-type TimeRange = "7days" | "30days" | "6months" | "12months";
-type Granularity = "day" | "week" | "month";
+type Granularity = "day" | "month";
 
 interface SalesChartProps {
   transactions: Transaction[];
+  timeRange: TimeRange;
 }
 
-const TIME_RANGES: { value: TimeRange; label: string; granularity: Granularity }[] = [
-  { value: "7days", label: "7 jours", granularity: "day" },
-  { value: "30days", label: "30 jours", granularity: "day" },
-  { value: "6months", label: "6 mois", granularity: "month" },
-  { value: "12months", label: "12 mois", granularity: "month" },
-];
-
-export function SalesChart({ transactions }: SalesChartProps) {
-  const [timeRange, setTimeRange] = useState<TimeRange>("30days");
+export function SalesChart({ transactions, timeRange }: SalesChartProps) {
 
   const chartData = useMemo(() => {
     const now = new Date();
@@ -148,20 +136,8 @@ export function SalesChart({ transactions }: SalesChartProps) {
 
   return (
     <div className="rounded-xl bg-card p-6 shadow-card">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6">
         <h3 className="text-lg font-medium">Evolution des ventes</h3>
-        <div className="flex gap-2">
-          {TIME_RANGES.map((range) => (
-            <Button
-              key={range.value}
-              variant={timeRange === range.value ? "default" : "outline"}
-              size="sm"
-              onClick={() => setTimeRange(range.value)}
-            >
-              {range.label}
-            </Button>
-          ))}
-        </div>
       </div>
 
       <div className="h-[300px]">
