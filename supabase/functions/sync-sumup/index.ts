@@ -49,45 +49,67 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    console.log("Fetching transactions from SumUp API...");
+    console.log("Fetching all transactions from SumUp API...");
 
-    // Fetch transactions from SumUp API
-    // Get transactions from the last 30 days by default
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const startDate = thirtyDaysAgo.toISOString().split("T")[0];
+    // Fetch ALL transactions from SumUp API using pagination
+    // Start from a very old date to get everything
+    const startDate = "2020-01-01"; // Far enough back to capture all transactions
     const endDate = new Date().toISOString().split("T")[0];
 
-    const sumupResponse = await fetch(
-      `https://api.sumup.com/v0.1/me/transactions/history?oldest_time=${startDate}&newest_time=${endDate}&limit=100`,
-      {
-        headers: {
-          Authorization: `Bearer ${sumupApiKey}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const allTransactions: SumUpTransaction[] = [];
+    let hasMore = true;
+    let offset = 0;
+    const limit = 100; // Max allowed by SumUp API
 
-    if (!sumupResponse.ok) {
-      const errorText = await sumupResponse.text();
-      console.error("SumUp API error:", sumupResponse.status, errorText);
-      return new Response(
-        JSON.stringify({
-          error: "Failed to fetch from SumUp",
-          details: errorText,
-          status: sumupResponse.status,
-        }),
+    while (hasMore) {
+      console.log(`Fetching transactions with offset ${offset}...`);
+
+      const sumupResponse = await fetch(
+        `https://api.sumup.com/v0.1/me/transactions/history?oldest_time=${startDate}&newest_time=${endDate}&limit=${limit}&offset=${offset}`,
         {
-          status: sumupResponse.status,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${sumupApiKey}`,
+            "Content-Type": "application/json",
+          },
         }
       );
+
+      if (!sumupResponse.ok) {
+        const errorText = await sumupResponse.text();
+        console.error("SumUp API error:", sumupResponse.status, errorText);
+        return new Response(
+          JSON.stringify({
+            error: "Failed to fetch from SumUp",
+            details: errorText,
+            status: sumupResponse.status,
+          }),
+          {
+            status: sumupResponse.status,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      const sumupData: SumUpResponse = await sumupResponse.json();
+      const fetchedCount = sumupData.items?.length || 0;
+      console.log(`Fetched ${fetchedCount} transactions in this batch`);
+
+      if (sumupData.items && sumupData.items.length > 0) {
+        allTransactions.push(...sumupData.items);
+        offset += sumupData.items.length;
+
+        // If we got fewer items than the limit, we've reached the end
+        if (sumupData.items.length < limit) {
+          hasMore = false;
+        }
+      } else {
+        hasMore = false;
+      }
     }
 
-    const sumupData: SumUpResponse = await sumupResponse.json();
-    console.log(`Fetched ${sumupData.items?.length || 0} transactions from SumUp`);
+    console.log(`Fetched ${allTransactions.length} total transactions from SumUp`);
 
-    if (!sumupData.items || sumupData.items.length === 0) {
+    if (allTransactions.length === 0) {
       return new Response(
         JSON.stringify({ message: "No transactions found", synced: 0 }),
         {
@@ -96,6 +118,8 @@ Deno.serve(async (req) => {
         }
       );
     }
+
+    const sumupData = { items: allTransactions };
 
     // Filter only successful transactions
     const successfulTransactions = sumupData.items.filter(
