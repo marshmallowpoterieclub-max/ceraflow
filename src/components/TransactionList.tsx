@@ -1,12 +1,9 @@
 import { useState } from "react";
-import { Pencil, Trash2, Package } from "lucide-react";
+import { Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { TransactionFormDialog } from "@/components/TransactionFormDialog";
-import { DeleteTransactionDialog } from "@/components/DeleteTransactionDialog";
 import { TransactionItemsDialog } from "@/components/TransactionItemsDialog";
 import type { Transaction } from "@/hooks/useTransactions";
 
@@ -51,8 +48,6 @@ function formatDescription(description: string | null): string {
 }
 
 export function TransactionList({ transactions, isLoading }: TransactionListProps) {
-  const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
-  const [deleteTransaction, setDeleteTransaction] = useState<Transaction | null>(null);
   const [viewItemsTransaction, setViewItemsTransaction] = useState<Transaction | null>(null);
 
   if (isLoading) {
@@ -124,25 +119,6 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                {/* Action buttons - visible on hover */}
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => setEditTransaction(transaction)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
-                    onClick={() => setDeleteTransaction(transaction)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
                 <Badge variant={getSourceBadgeVariant(transaction.source)}>
                   {getSourceLabel(transaction.source)}
                 </Badge>
@@ -157,20 +133,6 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
           );
         })}
       </div>
-
-      {/* Edit Dialog */}
-      <TransactionFormDialog
-        open={!!editTransaction}
-        onOpenChange={(open) => !open && setEditTransaction(null)}
-        transaction={editTransaction}
-      />
-
-      {/* Delete Dialog */}
-      <DeleteTransactionDialog
-        open={!!deleteTransaction}
-        onOpenChange={(open) => !open && setDeleteTransaction(null)}
-        transaction={deleteTransaction}
-      />
 
       {/* Items Dialog */}
       <TransactionItemsDialog
