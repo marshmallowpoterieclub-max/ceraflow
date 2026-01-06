@@ -13,36 +13,42 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTransactions, useTransactionStats } from "@/hooks/useTransactions";
 import { useExpenses, useExpenseStats } from "@/hooks/useExpenses";
-
 const Index = () => {
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
   const [isNewTransactionOpen, setIsNewTransactionOpen] = useState(false);
   const [isNewExpenseOpen, setIsNewExpenseOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("revenus");
-
-  const { data: transactions, isLoading: transactionsLoading } = useTransactions({
-    source: selectedSource,
+  const {
+    data: transactions,
+    isLoading: transactionsLoading
+  } = useTransactions({
+    source: selectedSource
   });
 
   // All transactions for export (no source filter)
-  const { data: allTransactions } = useTransactions({});
-
-  const { data: stats, isLoading: statsLoading } = useTransactionStats();
-
-  const { data: expenses, isLoading: expensesLoading } = useExpenses({});
-  const { data: expenseStats, isLoading: expenseStatsLoading } = useExpenseStats();
-
+  const {
+    data: allTransactions
+  } = useTransactions({});
+  const {
+    data: stats,
+    isLoading: statsLoading
+  } = useTransactionStats();
+  const {
+    data: expenses,
+    isLoading: expensesLoading
+  } = useExpenses({});
+  const {
+    data: expenseStats,
+    isLoading: expenseStatsLoading
+  } = useExpenseStats();
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("fr-FR", {
       style: "currency",
-      currency: "EUR",
+      currency: "EUR"
     }).format(value);
   };
-
   const netResult = (stats?.total || 0) - (expenseStats?.total || 0);
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
@@ -51,9 +57,7 @@ const Index = () => {
               <span className="text-lg font-display font-bold text-primary-foreground">C</span>
             </div>
             <div>
-              <h1 className="text-2xl font-display font-semibold text-foreground">
-                Ceramique Studio
-              </h1>
+              <h1 className="text-2xl font-display font-semibold text-foreground">Ceraflow</h1>
               <p className="text-sm text-muted-foreground">
                 Gestion des finances
               </p>
@@ -76,34 +80,10 @@ const Index = () => {
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              title="Recettes totales"
-              value={statsLoading ? "..." : formatCurrency(stats?.total || 0)}
-              subtitle="Ce mois"
-              icon={Euro}
-              delay={0}
-            />
-            <StatCard
-              title="Depenses totales"
-              value={expenseStatsLoading ? "..." : formatCurrency(expenseStats?.total || 0)}
-              subtitle="Ce mois"
-              icon={TrendingDown}
-              delay={100}
-            />
-            <StatCard
-              title="Resultat net"
-              value={statsLoading || expenseStatsLoading ? "..." : formatCurrency(netResult)}
-              subtitle={netResult >= 0 ? "Benefice" : "Perte"}
-              icon={TrendingUp}
-              delay={200}
-            />
-            <StatCard
-              title="Transactions"
-              value={statsLoading || expenseStatsLoading ? "..." : String((stats?.transactionCount || 0) + (expenseStats?.expenseCount || 0))}
-              subtitle="Total"
-              icon={Receipt}
-              delay={300}
-            />
+            <StatCard title="Recettes totales" value={statsLoading ? "..." : formatCurrency(stats?.total || 0)} subtitle="Ce mois" icon={Euro} delay={0} />
+            <StatCard title="Depenses totales" value={expenseStatsLoading ? "..." : formatCurrency(expenseStats?.total || 0)} subtitle="Ce mois" icon={TrendingDown} delay={100} />
+            <StatCard title="Resultat net" value={statsLoading || expenseStatsLoading ? "..." : formatCurrency(netResult)} subtitle={netResult >= 0 ? "Benefice" : "Perte"} icon={TrendingUp} delay={200} />
+            <StatCard title="Transactions" value={statsLoading || expenseStatsLoading ? "..." : String((stats?.transactionCount || 0) + (expenseStats?.expenseCount || 0))} subtitle="Total" icon={Receipt} delay={300} />
           </div>
         </section>
 
@@ -133,24 +113,14 @@ const Index = () => {
                   Dernieres transactions
                 </h2>
                 <div className="flex items-center gap-4">
-                  <SourceFilter
-                    selectedSource={selectedSource}
-                    onSourceChange={setSelectedSource}
-                  />
-                  <Button
-                    size="sm"
-                    onClick={() => setIsNewTransactionOpen(true)}
-                    className="gap-2"
-                  >
+                  <SourceFilter selectedSource={selectedSource} onSourceChange={setSelectedSource} />
+                  <Button size="sm" onClick={() => setIsNewTransactionOpen(true)} className="gap-2">
                     <Plus className="h-4 w-4" />
                     Nouvelle
                   </Button>
                 </div>
               </div>
-              <TransactionList
-                transactions={transactions || []}
-                isLoading={transactionsLoading}
-              />
+              <TransactionList transactions={transactions || []} isLoading={transactionsLoading} />
             </section>
           </TabsContent>
 
@@ -162,20 +132,13 @@ const Index = () => {
                   Dernieres depenses
                 </h2>
                 <div className="flex items-center gap-4">
-                  <Button
-                    size="sm"
-                    onClick={() => setIsNewExpenseOpen(true)}
-                    className="gap-2"
-                  >
+                  <Button size="sm" onClick={() => setIsNewExpenseOpen(true)} className="gap-2">
                     <Plus className="h-4 w-4" />
                     Nouvelle depense
                   </Button>
                 </div>
               </div>
-              <ExpenseList
-                expenses={expenses || []}
-                isLoading={expensesLoading}
-              />
+              <ExpenseList expenses={expenses || []} isLoading={expensesLoading} />
             </section>
           </TabsContent>
         </Tabs>
@@ -191,20 +154,10 @@ const Index = () => {
       </footer>
 
       {/* New Transaction Dialog */}
-      <TransactionFormDialog
-        open={isNewTransactionOpen}
-        onOpenChange={setIsNewTransactionOpen}
-        transaction={null}
-      />
+      <TransactionFormDialog open={isNewTransactionOpen} onOpenChange={setIsNewTransactionOpen} transaction={null} />
 
       {/* New Expense Dialog */}
-      <ExpenseFormDialog
-        open={isNewExpenseOpen}
-        onOpenChange={setIsNewExpenseOpen}
-        expense={null}
-      />
-    </div>
-  );
+      <ExpenseFormDialog open={isNewExpenseOpen} onOpenChange={setIsNewExpenseOpen} expense={null} />
+    </div>;
 };
-
 export default Index;
