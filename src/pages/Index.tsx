@@ -141,8 +141,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
             <div className="flex gap-2">
-              <SyncButton source="sumup" label="Sync SumUp" />
-              <SyncButton source="stripe" label="Sync Stripe" />
+              <SyncButton />
               <ExportButton transactions={allTransactions || []} />
             </div>
           </div>
