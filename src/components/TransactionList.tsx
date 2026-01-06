@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { TransactionItemsDialog } from "@/components/TransactionItemsDialog";
+import { TransactionDetailsDialog } from "@/components/TransactionDetailsDialog";
 import type { Transaction } from "@/hooks/useTransactions";
 
 interface TransactionListProps {
@@ -48,7 +48,7 @@ function formatDescription(description: string | null): string {
 }
 
 export function TransactionList({ transactions, isLoading }: TransactionListProps) {
-  const [viewItemsTransaction, setViewItemsTransaction] = useState<Transaction | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   if (isLoading) {
     return (
@@ -78,10 +78,11 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
           const hasItems = transaction.items_count && transaction.items_count > 1;
 
           return (
-            <div
+            <button
               key={transaction.id}
+              onClick={() => setSelectedTransaction(transaction)}
               className={cn(
-                "group flex items-center justify-between rounded-xl bg-card p-4 shadow-card transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-slide-up"
+                "group flex items-center justify-between rounded-xl bg-card p-4 shadow-card transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-slide-up w-full text-left cursor-pointer"
               )}
               style={{ animationDelay: `${index * 50}ms` }}
             >
@@ -92,29 +93,24 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
                   </span>
                 </div>
                 <div className="space-y-1">
-                  {hasItems ? (
-                    <button
-                      onClick={() => setViewItemsTransaction(transaction)}
-                      className="font-medium text-foreground hover:text-primary hover:underline underline-offset-2 transition-colors flex items-center gap-1.5"
-                    >
-                      <Package className="h-4 w-4" />
-                      {transaction.items_count} articles
-                    </button>
-                  ) : (
-                    <p className="font-medium text-foreground">
-                      {formatDescription(transaction.description)}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm text-muted-foreground">
-                      {transaction.customer_name || "Client anonyme"}
-                    </p>
+                  <p className="font-medium text-foreground">
+                    {transaction.customer_name || "Client anonyme"}
+                  </p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {hasItems ? (
+                      <span className="flex items-center gap-1">
+                        <Package className="h-3.5 w-3.5" />
+                        {transaction.items_count} articles
+                      </span>
+                    ) : (
+                      <span>{formatDescription(transaction.description)}</span>
+                    )}
                     <span className="text-muted-foreground/50">•</span>
-                    <p className="text-sm text-muted-foreground">
+                    <span>
                       {format(new Date(transaction.transaction_date), "d MMM yyyy", {
                         locale: fr,
                       })}
-                    </p>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -129,16 +125,16 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
                   }).format(transaction.amount)}
                 </p>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
 
-      {/* Items Dialog */}
-      <TransactionItemsDialog
-        open={!!viewItemsTransaction}
-        onOpenChange={(open) => !open && setViewItemsTransaction(null)}
-        transaction={viewItemsTransaction}
+      {/* Transaction Details Dialog */}
+      <TransactionDetailsDialog
+        open={!!selectedTransaction}
+        onOpenChange={(open) => !open && setSelectedTransaction(null)}
+        transaction={selectedTransaction}
       />
     </>
   );

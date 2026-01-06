@@ -9,6 +9,12 @@ export interface Transaction {
   external_id: string | null;
   customer_name: string | null;
   customer_email: string | null;
+  customer_phone: string | null;
+  customer_city: string | null;
+  card_brand: string | null;
+  card_last4: string | null;
+  receipt_url: string | null;
+  payment_method: string | null;
   transaction_date: string;
   created_at: string;
   updated_at: string;

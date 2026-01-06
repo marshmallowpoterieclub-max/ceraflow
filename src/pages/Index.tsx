@@ -71,6 +71,7 @@ const Index = () => {
             </h2>
             <div className="flex gap-2">
               <SyncButton source="sumup" label="Sync SumUp" />
+              <SyncButton source="stripe" label="Sync Stripe" />
               <ExportButton transactions={allTransactions || []} />
             </div>
           </div>
