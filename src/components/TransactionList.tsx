@@ -75,7 +75,27 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
     <>
       <div className="space-y-3">
         {transactions.map((transaction, index) => {
-          const hasItems = transaction.items_count && transaction.items_count > 1;
+          const hasMultipleItems = transaction.items_count && transaction.items_count > 1;
+          const isStripe = transaction.source === "stripe";
+
+          // Titre principal : nom client pour Stripe, article(s) pour SumUp
+          const title = isStripe
+            ? transaction.customer_name || "Client anonyme"
+            : hasMultipleItems
+              ? `${transaction.items_count} articles`
+              : formatDescription(transaction.description);
+
+          // Sous-titre : description pour Stripe, nom client pour SumUp
+          const subtitle = isStripe
+            ? formatDescription(transaction.description)
+            : transaction.customer_name || "Client anonyme";
+
+          // Initiale pour l'avatar
+          const avatarInitial = isStripe
+            ? transaction.customer_name?.charAt(0) || "?"
+            : hasMultipleItems
+              ? String(transaction.items_count)
+              : transaction.description?.charAt(0) || "?";
 
           return (
             <button
@@ -88,23 +108,18 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                  <span className="text-lg font-display font-semibold text-primary">
-                    {transaction.customer_name?.charAt(0) || "?"}
-                  </span>
+                  {hasMultipleItems && !isStripe ? (
+                    <Package className="h-5 w-5 text-primary" />
+                  ) : (
+                    <span className="text-lg font-display font-semibold text-primary">
+                      {avatarInitial}
+                    </span>
+                  )}
                 </div>
                 <div className="space-y-1">
-                  <p className="font-medium text-foreground">
-                    {transaction.customer_name || "Client anonyme"}
-                  </p>
+                  <p className="font-medium text-foreground">{title}</p>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    {hasItems ? (
-                      <span className="flex items-center gap-1">
-                        <Package className="h-3.5 w-3.5" />
-                        {transaction.items_count} articles
-                      </span>
-                    ) : (
-                      <span>{formatDescription(transaction.description)}</span>
-                    )}
+                    <span>{subtitle}</span>
                     <span className="text-muted-foreground/50">•</span>
                     <span>
                       {format(new Date(transaction.transaction_date), "d MMM yyyy", {
