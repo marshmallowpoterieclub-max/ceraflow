@@ -14,127 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      expense_categories: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
-      expenses: {
-        Row: {
-          amount: number
-          category_id: string | null
-          created_at: string
-          description: string | null
-          expense_date: string
-          id: string
-          payment_method: string | null
-          product: string | null
-          supplier: string | null
-          title: string
-          updated_at: string
-          vat_amount: number | null
-          vat_rate: number | null
-        }
-        Insert: {
-          amount: number
-          category_id?: string | null
-          created_at?: string
-          description?: string | null
-          expense_date?: string
-          id?: string
-          payment_method?: string | null
-          product?: string | null
-          supplier?: string | null
-          title: string
-          updated_at?: string
-          vat_amount?: number | null
-          vat_rate?: number | null
-        }
-        Update: {
-          amount?: number
-          category_id?: string | null
-          created_at?: string
-          description?: string | null
-          expense_date?: string
-          id?: string
-          payment_method?: string | null
-          product?: string | null
-          supplier?: string | null
-          title?: string
-          updated_at?: string
-          vat_amount?: number | null
-          vat_rate?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "expenses_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "expense_categories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      transaction_items: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          price: number
-          quantity: number
-          total_price: number
-          transaction_id: string
-          vat_amount: number | null
-          vat_rate: number | null
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          price: number
-          quantity?: number
-          total_price: number
-          transaction_id: string
-          vat_amount?: number | null
-          vat_rate?: number | null
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          price?: number
-          quantity?: number
-          total_price?: number
-          transaction_id?: string
-          vat_amount?: number | null
-          vat_rate?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "transaction_items_transaction_id_fkey"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "transactions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       transactions: {
         Row: {
           amount: number
@@ -144,7 +23,6 @@ export type Database = {
           description: string | null
           external_id: string | null
           id: string
-          items_count: number | null
           source: Database["public"]["Enums"]["payment_source"]
           transaction_date: string
           updated_at: string
@@ -157,7 +35,6 @@ export type Database = {
           description?: string | null
           external_id?: string | null
           id?: string
-          items_count?: number | null
           source?: Database["public"]["Enums"]["payment_source"]
           transaction_date?: string
           updated_at?: string
@@ -170,7 +47,6 @@ export type Database = {
           description?: string | null
           external_id?: string | null
           id?: string
-          items_count?: number | null
           source?: Database["public"]["Enums"]["payment_source"]
           transaction_date?: string
           updated_at?: string
