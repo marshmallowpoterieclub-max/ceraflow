@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
   ReferenceArea,
+  ReferenceLine,
 } from "recharts";
 import {
   format,
@@ -189,6 +190,13 @@ export function SalesChart({ transactions, timeRange }: SalesChartProps) {
     return spans;
   }, [chartData, timeRange]);
 
+  // Find today's label for the reference line
+  const todayLabel = useMemo(() => {
+    const today = format(new Date(), "yyyy-MM-dd");
+    const todayData = chartData.find((d) => d.date === today);
+    return todayData?.label;
+  }, [chartData]);
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("fr-FR", {
       style: "currency",
@@ -263,6 +271,22 @@ export function SalesChart({ transactions, timeRange }: SalesChartProps) {
                 ifOverflow="visible"
               />
             ))}
+            {/* Today indicator line */}
+            {todayLabel && (
+              <ReferenceLine
+                x={todayLabel}
+                stroke="hsl(0, 70%, 50%)"
+                strokeWidth={2}
+                strokeDasharray="4 4"
+                label={{
+                  value: "Aujourd'hui",
+                  position: "top",
+                  fill: "hsl(0, 70%, 50%)",
+                  fontSize: 11,
+                  fontWeight: 500,
+                }}
+              />
+            )}
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis
               dataKey="label"
