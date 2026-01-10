@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -90,13 +89,6 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
             ? formatDescription(transaction.description)
             : transaction.customer_name || "Client anonyme";
 
-          // Initiale pour l'avatar
-          const avatarInitial = isStripe
-            ? transaction.customer_name?.charAt(0) || "?"
-            : hasMultipleItems
-              ? String(transaction.items_count)
-              : transaction.description?.charAt(0) || "?";
-
           return (
             <button
               key={transaction.id}
@@ -107,15 +99,6 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                  {hasMultipleItems && !isStripe ? (
-                    <Package className="h-5 w-5 text-primary" />
-                  ) : (
-                    <span className="text-lg font-display font-semibold text-primary">
-                      {avatarInitial}
-                    </span>
-                  )}
-                </div>
                 <div className="space-y-1">
                   <p className="font-medium text-foreground">{title}</p>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">

@@ -11,6 +11,7 @@ import { ExpenseFormDialog } from "@/components/ExpenseFormDialog";
 import { ExpenseList } from "@/components/ExpenseList";
 import { SalesChart } from "@/components/SalesChart";
 import { TimeRangeFilter, type TimeRange } from "@/components/TimeRangeFilter";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -121,16 +122,19 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-              <span className="text-lg font-display font-bold text-primary-foreground">C</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
+                <span className="text-lg font-display font-bold text-primary-foreground">C</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-display font-semibold text-foreground">Ceraflow</h1>
+                <p className="text-sm text-muted-foreground">
+                  Gestion des finances
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-display font-semibold text-foreground">Ceraflow</h1>
-              <p className="text-sm text-muted-foreground">
-                Gestion des finances
-              </p>
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>

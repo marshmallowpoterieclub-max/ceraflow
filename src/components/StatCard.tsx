@@ -56,7 +56,6 @@ export function StatCard({
           <Icon className="h-6 w-6 text-primary" />
         </div>
       </div>
-      <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-primary/5" />
     </div>
   );
 }

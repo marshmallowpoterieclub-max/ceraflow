@@ -88,7 +88,7 @@ export function TransactionDetailsDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+        <DialogHeader className="pr-8">
           <div className="flex items-center justify-between">
             <DialogTitle>Details de la transaction</DialogTitle>
             <Badge variant={getSourceBadgeVariant(transaction.source)}>
