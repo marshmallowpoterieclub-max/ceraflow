@@ -134,7 +134,17 @@ const Index = () => {
                 </p>
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <Button
+                size="sm"
+                onClick={() => setIsNewExpenseOpen(true)}
+                className="gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Nouvelle depense
+              </Button>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
